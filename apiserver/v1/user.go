@@ -5,10 +5,9 @@
 package v1
 
 import (
-	"gorm.io/gorm"
-
 	"github.com/marmotedu/component-base/pkg/auth"
 	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
+	"gorm.io/gorm"
 )
 
 // User represents a user restful resource. It is also used as gorm model.
@@ -23,7 +22,7 @@ type User struct {
 	Nickname string `json:"nickname" gorm:"column:nickname" validate:"required,min=1,max=30"`
 
 	// Required: true
-	Password string `json:"password" gorm:"column:password" validate:"required"`
+	Password string `json:"password,omitempty" gorm:"column:password" validate:"required"`
 
 	// Required: true
 	Email string `json:"email" gorm:"column:email" validate:"required,email,min=1,max=100"`
@@ -53,7 +52,7 @@ type UserV2 struct {
 
 // UserListV2 v2 struct.
 type UserListV2 struct {
-	metav1.ListMeta `json:",inline"`
+	metav1.ListMeta `          json:",inline"`
 	Items           []*UserV2 `json:"items"`
 }
 
@@ -65,17 +64,20 @@ func (u *User) TableName() string {
 // Compare with the plain text password. Returns true if it's the same as the encrypted one (in the `User` struct).
 func (u *User) Compare(pwd string) (err error) {
 	err = auth.Compare(u.Password, pwd)
+
 	return
 }
 
 // BeforeCreate run before create database record.
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	u.Password, err = auth.Encrypt(u.Password)
+
 	return
 }
 
 // BeforeUpdate run before update database record.
 func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
 	u.Password, err = auth.Encrypt(u.Password)
+
 	return err
 }

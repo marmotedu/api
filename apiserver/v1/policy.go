@@ -5,14 +5,11 @@
 package v1
 
 import (
-	jsoniter "github.com/json-iterator/go"
+	"github.com/marmotedu/component-base/pkg/json"
+	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
 	"github.com/ory/ladon"
 	"gorm.io/gorm"
-
-	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
 )
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 // Policy represents a policy restful resource, include a ladon policy.
 // It is also used as gorm model.

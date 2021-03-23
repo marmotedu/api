@@ -5,10 +5,9 @@
 package v1
 
 import (
-	"gorm.io/gorm"
-
 	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
 	"github.com/marmotedu/component-base/pkg/util/idutil"
+	"gorm.io/gorm"
 )
 
 // Secret represents a secret restful resource.
@@ -18,13 +17,13 @@ type Secret struct {
 	// metav1.TypeMeta `json:",inline"`
 
 	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Username          string `json:"username" gorm:"column:username" validate:"omitempty"`
-	SecretID          string `json:"secretID" gorm:"column:secretID" validate:"omitempty"`
-	SecretKey         string `json:"secretKey" gorm:"column:secretKey" validate:"omitempty"`
+	metav1.ObjectMeta `       json:"metadata,omitempty"`
+	Username          string `json:"username"           gorm:"column:username"  validate:"omitempty"`
+	SecretID          string `json:"secretID"           gorm:"column:secretID"  validate:"omitempty"`
+	SecretKey         string `json:"secretKey"          gorm:"column:secretKey" validate:"omitempty"`
 
 	// Required: true
-	Expires     int64  `json:"expires" gorm:"column:expires" validate:"omitempty"`
+	Expires     int64  `json:"expires"     gorm:"column:expires"     validate:"omitempty"`
 	Description string `json:"description" gorm:"column:description" validate:"description"`
 }
 

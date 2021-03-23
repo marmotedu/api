@@ -4,7 +4,7 @@
 
 package v1
 
-import "encoding/json"
+import "github.com/marmotedu/component-base/pkg/json"
 
 // Response represents the response of subject access review request.
 type Response struct {
@@ -17,5 +17,6 @@ type Response struct {
 // ToString marshal Response struct to a json string.
 func (rsp *Response) ToString() string {
 	data, _ := json.Marshal(rsp)
+
 	return string(data)
 }
