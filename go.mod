@@ -12,10 +12,3 @@ require (
 	google.golang.org/protobuf v1.26.0
 	gorm.io/gorm v1.21.4
 )
-
-replace (
-	github.com/marmotedu/api => /home/colin/workspace/golang/src/github.com/marmotedu/api
-	github.com/marmotedu/component-base => /home/colin/workspace/golang/src/github.com/marmotedu/component-base
-	github.com/marmotedu/errors => /home/colin/workspace/golang/src/github.com/marmotedu/errors
-	github.com/marmotedu/marmotedu-sdk-go => /home/colin/workspace/golang/src/github.com/marmotedu/marmotedu-sdk-go
-)
