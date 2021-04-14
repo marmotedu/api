@@ -30,6 +30,8 @@ type User struct {
 	Phone string `json:"phone" gorm:"column:phone" validate:"omitempty"`
 
 	IsAdmin int `json:"isAdmin,omitempty" gorm:"column:isAdmin" validate:"omitempty"`
+
+	TotalPolicy int64 `json:"totalPolicy"`
 }
 
 // UserList is the whole list of all users which have been stored in stroage.
@@ -42,18 +44,6 @@ type UserList struct {
 	metav1.ListMeta `json:",inline"`
 
 	Items []*User `json:"items"`
-}
-
-// UserV2 user v2 struct.
-type UserV2 struct {
-	*User
-	TotalPolicy int64 `json:"totalPolicy"`
-}
-
-// UserListV2 v2 struct.
-type UserListV2 struct {
-	metav1.ListMeta `          json:",inline"`
-	Items           []*UserV2 `json:"items"`
 }
 
 // TableName maps to mysql table name.
