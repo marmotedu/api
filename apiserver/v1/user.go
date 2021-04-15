@@ -6,6 +6,7 @@ package v1
 
 import (
 	"github.com/marmotedu/component-base/pkg/auth"
+	"github.com/marmotedu/component-base/pkg/json"
 	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
 	"gorm.io/gorm"
 )
@@ -31,7 +32,7 @@ type User struct {
 
 	IsAdmin int `json:"isAdmin,omitempty" gorm:"column:isAdmin" validate:"omitempty"`
 
-	TotalPolicy int64 `json:"totalPolicy"`
+	TotalPolicy int64 `json:"totalPolicy" gorm:"-" validate:"omitempty"`
 }
 
 // UserList is the whole list of all users which have been stored in stroage.
@@ -61,6 +62,7 @@ func (u *User) Compare(pwd string) (err error) {
 // BeforeCreate run before create database record.
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	u.Password, err = auth.Encrypt(u.Password)
+	u.ExtendShadow = u.Extend.String()
 
 	return
 }
@@ -68,6 +70,16 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 // BeforeUpdate run before update database record.
 func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
 	u.Password, err = auth.Encrypt(u.Password)
+	u.ExtendShadow = u.Extend.String()
 
 	return err
+}
+
+// AfterFind run after find to unmarshal a extend shadown string into metav1.Extend struct.
+func (u *User) AfterFind(tx *gorm.DB) (err error) {
+	if err := json.Unmarshal([]byte(u.ExtendShadow), &u.Extend); err != nil {
+		return err
+	}
+
+	return nil
 }

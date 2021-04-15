@@ -313,7 +313,7 @@ type PolicyInfo struct {
 
 	Name      string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Username  string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	PolicyStr string `protobuf:"bytes,3,opt,name=policy_str,json=policyStr,proto3" json:"policy_str,omitempty"`
+	PolicyShadow string `protobuf:"bytes,3,opt,name=policy_str,json=policyStr,proto3" json:"policy_str,omitempty"`
 	CreatedAt string `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 }
 
@@ -363,9 +363,9 @@ func (x *PolicyInfo) GetUsername() string {
 	return ""
 }
 
-func (x *PolicyInfo) GetPolicyStr() string {
+func (x *PolicyInfo) GetPolicyShadow() string {
 	if x != nil {
-		return x.PolicyStr
+		return x.PolicyShadow
 	}
 	return ""
 }

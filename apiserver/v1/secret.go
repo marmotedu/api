@@ -5,6 +5,7 @@
 package v1
 
 import (
+	"github.com/marmotedu/component-base/pkg/json"
 	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
 	"github.com/marmotedu/component-base/pkg/util/idutil"
 	"gorm.io/gorm"
@@ -49,5 +50,23 @@ func (s *Secret) BeforeCreate(tx *gorm.DB) (err error) {
 	s.SecretID = idutil.NewSecretID()
 	s.SecretKey = idutil.NewSecretKey()
 
+	s.ExtendShadow = s.Extend.String()
+
 	return
+}
+
+// BeforeUpdate run before update database record.
+func (s *Secret) BeforeUpdate(tx *gorm.DB) (err error) {
+	s.ExtendShadow = s.Extend.String()
+
+	return err
+}
+
+// AfterFind run after find to unmarshal a extend shadown string into metav1.Extend struct.
+func (s *Secret) AfterFind(tx *gorm.DB) (err error) {
+	if err := json.Unmarshal([]byte(s.ExtendShadow), &s.Extend); err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -11,6 +11,11 @@ import (
 	"gorm.io/gorm"
 )
 
+// AuthzPolicy defines iam policy type.
+type AuthzPolicy struct {
+	ladon.DefaultPolicy
+}
+
 // Policy represents a policy restful resource, include a ladon policy.
 // It is also used as gorm model.
 type Policy struct {
@@ -23,11 +28,12 @@ type Policy struct {
 	// The user of the policy.
 	Username string `json:"username" gorm:"column:username" validate:"omitempty"`
 
-	// The ladon policy content. Just a string format of ladon.DefaultPolicy
-	PolicyStr string `json:"-" gorm:"column:policy" validate:"omitempty"`
+	// AuthzPolicy policy, will not be stored in db.
+	Policy AuthzPolicy `json:"policy,omitempty" gorm:"-" validate:"omitempty"`
+	//Policy ladon.DefaultPolicy `json:"policy,omitempty" gorm:"-" validate:"omitempty"`
 
-	// Ladon policy, will not be stored.
-	Policy ladon.DefaultPolicy `json:"policy,omitempty" gorm:"-" validate:"omitempty"`
+	// The ladon policy content, just a string format of ladon.DefaultPolicy. DO NOT modify directly.
+	PolicyShadow string `json:"-" gorm:"column:policyShadow" validate:"omitempty"`
 }
 
 // PolicyList is the whole list of all policies which have been stored in stroage.
@@ -47,38 +53,37 @@ func (p *Policy) TableName() string {
 	return "policy"
 }
 
+// String returns the string format of Policy.
+func (ap AuthzPolicy) String() string {
+	data, _ := json.Marshal(ap)
+	return string(data)
+}
+
 // BeforeCreate run before create database record.
 func (p *Policy) BeforeCreate(tx *gorm.DB) (err error) {
-	ladon, err := json.Marshal(p.Policy)
-	if err != nil {
-		return err
-	}
-
-	p.PolicyStr = string(ladon)
+	p.PolicyShadow = p.Policy.String()
+	p.ExtendShadow = p.Extend.String()
 
 	return
 }
 
 // BeforeUpdate run before update database record.
 func (p *Policy) BeforeUpdate(tx *gorm.DB) (err error) {
-	ladon, err := json.Marshal(p.Policy)
-	if err != nil {
-		return err
-	}
-
-	p.PolicyStr = string(ladon)
+	p.PolicyShadow = p.Policy.String()
+	p.ExtendShadow = p.Extend.String()
 
 	return
 }
 
 // AfterFind run after find to unmarshal a policy string into ladon.DefaultPolicy struct.
 func (p *Policy) AfterFind(tx *gorm.DB) (err error) {
-	var policy ladon.DefaultPolicy
-	if err := json.Unmarshal([]byte(p.PolicyStr), &policy); err != nil {
+	if err := json.Unmarshal([]byte(p.PolicyShadow), &p.Policy); err != nil {
 		return err
 	}
 
-	p.Policy = policy
+	if err := json.Unmarshal([]byte(p.ExtendShadow), &p.Extend); err != nil {
+		return err
+	}
 
 	return
 }
