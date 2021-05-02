@@ -8,6 +8,7 @@ import (
 	"github.com/marmotedu/component-base/pkg/auth"
 	"github.com/marmotedu/component-base/pkg/json"
 	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
+	"github.com/marmotedu/component-base/pkg/util/idutil"
 	"gorm.io/gorm"
 )
 
@@ -65,6 +66,12 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	u.ExtendShadow = u.Extend.String()
 
 	return
+}
+
+// AfterCreate run after create database record.
+func (u *User) AfterCreate(tx *gorm.DB) (err error) {
+	u.InstanceID = idutil.GetInstanceID(u.ID, "user-")
+	return tx.Save(u).Error
 }
 
 // BeforeUpdate run before update database record.

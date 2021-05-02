@@ -49,10 +49,15 @@ func (s *Secret) TableName() string {
 func (s *Secret) BeforeCreate(tx *gorm.DB) (err error) {
 	s.SecretID = idutil.NewSecretID()
 	s.SecretKey = idutil.NewSecretKey()
-
 	s.ExtendShadow = s.Extend.String()
 
 	return
+}
+
+// AfterCreate run after create database record.
+func (s *Secret) AfterCreate(tx *gorm.DB) (err error) {
+	s.InstanceID = idutil.GetInstanceID(s.ID, "secret-")
+	return tx.Save(s).Error
 }
 
 // BeforeUpdate run before update database record.

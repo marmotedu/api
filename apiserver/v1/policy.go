@@ -7,14 +7,13 @@ package v1
 import (
 	"github.com/marmotedu/component-base/pkg/json"
 	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
+	"github.com/marmotedu/component-base/pkg/util/idutil"
 	"github.com/ory/ladon"
 	"gorm.io/gorm"
 )
 
 // AuthzPolicy defines iam policy type.
-type AuthzPolicy struct {
-	ladon.DefaultPolicy
-}
+type AuthzPolicy ladon.DefaultPolicy
 
 // Policy represents a policy restful resource, include a ladon policy.
 // It is also used as gorm model.
@@ -65,6 +64,12 @@ func (p *Policy) BeforeCreate(tx *gorm.DB) (err error) {
 	p.ExtendShadow = p.Extend.String()
 
 	return
+}
+
+// AfterCreate run after create database record.
+func (p *Policy) AfterCreate(tx *gorm.DB) (err error) {
+	p.InstanceID = idutil.GetInstanceID(p.ID, "policy-")
+	return tx.Save(p).Error
 }
 
 // BeforeUpdate run before update database record.
