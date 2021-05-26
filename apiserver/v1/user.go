@@ -71,6 +71,7 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 // AfterCreate run after create database record.
 func (u *User) AfterCreate(tx *gorm.DB) (err error) {
 	u.InstanceID = idutil.GetInstanceID(u.ID, "user-")
+
 	return tx.Save(u).Error
 }
 

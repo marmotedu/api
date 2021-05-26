@@ -51,7 +51,8 @@ message PolicyInfo {
     string name= 1;
     string username   = 2;
     string policy_str = 3;
-    string created_at = 4;
+    string policy_shadow = 4;
+    string created_at = 5;
 }
 
 // ListPoliciesResponse defines ListPolicies response struct.

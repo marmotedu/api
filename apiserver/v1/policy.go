@@ -29,7 +29,7 @@ type Policy struct {
 
 	// AuthzPolicy policy, will not be stored in db.
 	Policy AuthzPolicy `json:"policy,omitempty" gorm:"-" validate:"omitempty"`
-	//Policy ladon.DefaultPolicy `json:"policy,omitempty" gorm:"-" validate:"omitempty"`
+	// Policy ladon.DefaultPolicy `json:"policy,omitempty" gorm:"-" validate:"omitempty"`
 
 	// The ladon policy content, just a string format of ladon.DefaultPolicy. DO NOT modify directly.
 	PolicyShadow string `json:"-" gorm:"column:policyShadow" validate:"omitempty"`
@@ -55,6 +55,7 @@ func (p *Policy) TableName() string {
 // String returns the string format of Policy.
 func (ap AuthzPolicy) String() string {
 	data, _ := json.Marshal(ap)
+
 	return string(data)
 }
 
@@ -69,6 +70,7 @@ func (p *Policy) BeforeCreate(tx *gorm.DB) (err error) {
 // AfterCreate run after create database record.
 func (p *Policy) AfterCreate(tx *gorm.DB) (err error) {
 	p.InstanceID = idutil.GetInstanceID(p.ID, "policy-")
+
 	return tx.Save(p).Error
 }
 

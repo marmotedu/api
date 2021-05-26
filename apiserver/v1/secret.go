@@ -57,6 +57,7 @@ func (s *Secret) BeforeCreate(tx *gorm.DB) (err error) {
 // AfterCreate run after create database record.
 func (s *Secret) AfterCreate(tx *gorm.DB) (err error) {
 	s.InstanceID = idutil.GetInstanceID(s.ID, "secret-")
+
 	return tx.Save(s).Error
 }
 
