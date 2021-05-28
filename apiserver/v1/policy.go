@@ -13,7 +13,9 @@ import (
 )
 
 // AuthzPolicy defines iam policy type.
-type AuthzPolicy ladon.DefaultPolicy
+type AuthzPolicy struct {
+	ladon.DefaultPolicy
+}
 
 // Policy represents a policy restful resource, include a ladon policy.
 // It is also used as gorm model.
