@@ -483,89 +483,10 @@ linters-settings:
 linters:
   # please, do not use `enable-all`: it's deprecated and will be removed soon.
   # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
-  disable-all: true
+  enable-all: true
   fast: false
-  presets:
-    - bugs
-    - unused
-  enable:
-    - megacheck
-    - bodyclose
-    - deadcode
-    - depguard
-    - dogsled
-    - dupl
-    - errcheck
-    - funlen
-    - gochecknoinits
-    - goconst
-      #- gocritic
-    - gocyclo
-    - gofmt
-    - goimports
-    - golint
-    - importas
-    - wastedassign
-    - nilerr
-    - goprintffuncname
-    - gosec
-    - gosimple
-    - govet
-    - ineffassign
-    - lll
-    - misspell
-    - nakedret
-    - nolintlint
-    - rowserrcheck
-    - scopelint
-    - staticcheck
-    - structcheck
-    - stylecheck
-    - typecheck
-    - unconvert
-    - unparam
-    - unused
-    - varcheck
-    - whitespace
-    - asciicheck
-    - gocognit
-    - godot
-    - godox
-    - nestif
-    - prealloc
-    - gomodguard
-    - exhaustive
-    - revive
-    - ifshort
-    - forbidigo
-    - makezero
-    - thelper
-    - predeclared
-    - cyclop
-    - durationcheck
-    - paralleltest
-    - errorlint
-    - exhaustivestruct
-    - exportloopref
-    - gci
-    - gofumpt
-    - goheader
-    - vetshadow
-    - nlreturn
-    - noctx
-    - sqlclosecheck
-    - tparallel
-
-  # don't enable:
-    #- wrapcheck
-    #- forcetypeassert
-    #- goerr113
-    #- gomnd
-    #- wsl
-    #- testpackage
-    #- gochecknoglobals
-    #- interfacer
-    #- maligned
+  disable:
+    - gochecknoglobals
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
