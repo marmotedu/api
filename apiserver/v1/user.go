@@ -62,9 +62,6 @@ func (u *User) Compare(pwd string) (err error) {
 
 // BeforeCreate run before create database record.
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	u.Password, err = auth.Encrypt(u.Password)
-	u.ExtendShadow = u.Extend.String()
-
 	return
 }
 
@@ -72,6 +69,7 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 func (u *User) AfterCreate(tx *gorm.DB) (err error) {
 	u.InstanceID = idutil.GetInstanceID(u.ID, "user-")
 
+	// NOTICE: tx.Save will trigger u.BeforeUpdate
 	return tx.Save(u).Error
 }
 
