@@ -7,7 +7,7 @@ syntax = "proto3";
 package proto;
 option go_package = "github.com/marmotedu/api/proto/apiserver/v1";
 
-//go:generate protoc -I. --experimental_allow_proto3_optional --go_out=plugins=grpc:.
+//go:generate protoc -I. --go_out=plugins=grpc:.
 
 
 // Cache implements a cache rpc service.
