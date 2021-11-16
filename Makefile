@@ -94,7 +94,6 @@ $(API_DEPSRCS): gen.plugin.verify $(API_DEPS)
 	@echo "===========> Generate protobuf files"
 	@mkdir -p $(OUTPUT_DIR)
 	@protoc -I $(PROTOC_INC_PATH) -I. \
-	 --experimental_allow_proto3_optional \
 	 --go_out=plugins=grpc:$(OUTPUT_DIR) $(@:.pb.go=.proto)
 	@cp $(OUTPUT_DIR)/$(ROOT_PACKAGE)/$@ $@ || cp $(OUTPUT_DIR)/$@ $@
 	@rm -rf $(OUTPUT_DIR)
