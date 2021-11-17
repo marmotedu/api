@@ -62,37 +62,43 @@ func (ap AuthzPolicy) String() string {
 }
 
 // BeforeCreate run before create database record.
-func (p *Policy) BeforeCreate(tx *gorm.DB) (err error) {
-	p.PolicyShadow = p.Policy.String()
-	p.ExtendShadow = p.Extend.String()
+func (p *Policy) BeforeCreate(tx *gorm.DB) error {
+	if err := p.ObjectMeta.BeforeCreate(tx); err != nil {
+		return err
+	}
 
-	return
+	p.PolicyShadow = p.Policy.String()
+
+	return nil
 }
 
 // AfterCreate run after create database record.
-func (p *Policy) AfterCreate(tx *gorm.DB) (err error) {
+func (p *Policy) AfterCreate(tx *gorm.DB) error {
 	p.InstanceID = idutil.GetInstanceID(p.ID, "policy-")
 
 	return tx.Save(p).Error
 }
 
 // BeforeUpdate run before update database record.
-func (p *Policy) BeforeUpdate(tx *gorm.DB) (err error) {
-	p.PolicyShadow = p.Policy.String()
-	p.ExtendShadow = p.Extend.String()
+func (p *Policy) BeforeUpdate(tx *gorm.DB) error {
+	if err := p.ObjectMeta.BeforeUpdate(tx); err != nil {
+		return err
+	}
 
-	return
+	p.PolicyShadow = p.Policy.String()
+
+	return nil
 }
 
 // AfterFind run after find to unmarshal a policy string into ladon.DefaultPolicy struct.
 func (p *Policy) AfterFind(tx *gorm.DB) (err error) {
+	if err := p.ObjectMeta.AfterFind(tx); err != nil {
+		return err
+	}
+
 	if err := json.Unmarshal([]byte(p.PolicyShadow), &p.Policy); err != nil {
 		return err
 	}
 
-	if err := json.Unmarshal([]byte(p.ExtendShadow), &p.Extend); err != nil {
-		return err
-	}
-
-	return
+	return nil
 }

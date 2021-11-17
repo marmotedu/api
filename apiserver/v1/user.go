@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/marmotedu/component-base/pkg/auth"
-	"github.com/marmotedu/component-base/pkg/json"
 	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
 	"github.com/marmotedu/component-base/pkg/util/idutil"
 	"gorm.io/gorm"
@@ -66,31 +65,9 @@ func (u *User) Compare(pwd string) (err error) {
 	return
 }
 
-// BeforeCreate run before create database record.
-func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	return
-}
-
 // AfterCreate run after create database record.
-func (u *User) AfterCreate(tx *gorm.DB) (err error) {
+func (u *User) AfterCreate(tx *gorm.DB) error {
 	u.InstanceID = idutil.GetInstanceID(u.ID, "user-")
 
-	// NOTICE: tx.Save will trigger u.BeforeUpdate
 	return tx.Save(u).Error
-}
-
-// BeforeUpdate run before update database record.
-func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
-	u.ExtendShadow = u.Extend.String()
-
-	return err
-}
-
-// AfterFind run after find to unmarshal a extend shadown string into metav1.Extend struct.
-func (u *User) AfterFind(tx *gorm.DB) (err error) {
-	if err := json.Unmarshal([]byte(u.ExtendShadow), &u.Extend); err != nil {
-		return err
-	}
-
-	return nil
 }
