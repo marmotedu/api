@@ -75,6 +75,9 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 func (u *User) AfterCreate(tx *gorm.DB) (err error) {
 	u.InstanceID = idutil.GetInstanceID(u.ID, "user-")
 
+	// Enable user
+	u.Status = 1
+
 	// NOTICE: tx.Save will trigger u.BeforeUpdate
 	return tx.Save(u).Error
 }
