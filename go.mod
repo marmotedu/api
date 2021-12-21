@@ -3,7 +3,7 @@ module github.com/marmotedu/api
 go 1.17
 
 require (
-	github.com/marmotedu/component-base v1.6.1
+	github.com/marmotedu/component-base v1.6.2
 	github.com/ory/ladon v1.2.0
 	google.golang.org/grpc v1.36.0
 	google.golang.org/protobuf v1.27.1
