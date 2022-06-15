@@ -5,6 +5,7 @@
 package v1
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/marmotedu/component-base/pkg/auth"
@@ -59,10 +60,12 @@ func (u *User) TableName() string {
 }
 
 // Compare with the plain text password. Returns true if it's the same as the encrypted one (in the `User` struct).
-func (u *User) Compare(pwd string) (err error) {
-	err = auth.Compare(u.Password, pwd)
+func (u *User) Compare(pwd string) error {
+	if err := auth.Compare(u.Password, pwd); err != nil {
+		return fmt.Errorf("failed to compile password: %w", err)
+	}
 
-	return
+	return nil
 }
 
 // AfterCreate run after create database record.

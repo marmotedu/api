@@ -5,6 +5,8 @@
 package v1
 
 import (
+	"fmt"
+
 	"github.com/marmotedu/component-base/pkg/json"
 	metav1 "github.com/marmotedu/component-base/pkg/meta/v1"
 	"github.com/marmotedu/component-base/pkg/util/idutil"
@@ -64,9 +66,10 @@ func (ap AuthzPolicy) String() string {
 // BeforeCreate run before create database record.
 func (p *Policy) BeforeCreate(tx *gorm.DB) error {
 	if err := p.ObjectMeta.BeforeCreate(tx); err != nil {
-		return err
+		return fmt.Errorf("failed to run `BeforeCreate` hook: %w", err)
 	}
 
+	p.Policy.ID = p.Name
 	p.PolicyShadow = p.Policy.String()
 
 	return nil
@@ -82,22 +85,23 @@ func (p *Policy) AfterCreate(tx *gorm.DB) error {
 // BeforeUpdate run before update database record.
 func (p *Policy) BeforeUpdate(tx *gorm.DB) error {
 	if err := p.ObjectMeta.BeforeUpdate(tx); err != nil {
-		return err
+		return fmt.Errorf("failed to run `BeforeUpdate` hook: %w", err)
 	}
 
+	p.Policy.ID = p.Name
 	p.PolicyShadow = p.Policy.String()
 
 	return nil
 }
 
 // AfterFind run after find to unmarshal a policy string into ladon.DefaultPolicy struct.
-func (p *Policy) AfterFind(tx *gorm.DB) (err error) {
+func (p *Policy) AfterFind(tx *gorm.DB) error {
 	if err := p.ObjectMeta.AfterFind(tx); err != nil {
-		return err
+		return fmt.Errorf("failed to run `AfterFind` hook: %w", err)
 	}
 
 	if err := json.Unmarshal([]byte(p.PolicyShadow), &p.Policy); err != nil {
-		return err
+		return fmt.Errorf("failed to unmarshal policyShadow: %w", err)
 	}
 
 	return nil
